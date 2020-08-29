@@ -68,7 +68,7 @@ class Encoder:
         # Take the bytearray of the string and convert each byte into binary format.
         return ''.join([bin(byte)[2:] for byte in bytearray(string)])
 
-    def __encode_bin_in_pixels(self, binary_str, pixels):
+    def __encode_bin_in_pixels(self, binary_str, pixels, width, height):
         """
         Encode binary string message in pixels.
 
@@ -88,17 +88,20 @@ class Encoder:
             p_val_str = format(p_val, "08b")
             return p_val_str[:7] + val
 
-        for pixel in pixels:
-            r, g, b = pixel
+        for i in range(0, height - 1):
+            for j in range(0, width - 1):
+                r, g, b = pixels[i, j]
 
-            _embed_val(r, binary_str[str_iter])
-            _embed_val(g, binary_str[str_iter + 1])
-            _embed_val(b, binary_str[str_iter + 2])
+                r_mod = _embed_val(r, binary_str[str_iter])
+                g_mod = _embed_val(r, binary_str[str_iter + 1])
+                b_mod = _embed_val(r, binary_str[str_iter + 2])
 
-            str_iter += 3
-            if str_iter >= len(binary_str):
-                break
+                pixels[i, j] = (int(r_mod, 2), int(g_mod, 2), int(b_mod, 2))
 
+                str_iter += 3
+
+                if str_iter >= len(binary_str):
+                    return
 
     '''
     Embed input message (encoded) into the image and save it.
@@ -114,9 +117,11 @@ class Encoder:
         xml_string_bin = self.__convert_string_to_bin(xml_string)
 
         # Get pixels from image.
-        pixels = list(image.getdata())
+        pixels = image.load()
 
         # Encode
-        self.__encode_bin_in_pixels(xml_string_bin, pixels)
+        self.__encode_bin_in_pixels(binary_str=xml_string_bin, pixels=pixels, width=image.size[1], height=image.size[0])
+
+        image.save("test.jpg")
 
         image.close()
