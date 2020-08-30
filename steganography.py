@@ -9,6 +9,7 @@ LOGGING_FORMAT = "[%(levelname)s] - %(message)s"
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 class Steganography:
 
     @staticmethod
@@ -18,8 +19,8 @@ class Steganography:
             input_image_file_name = vars_args['input']
             output_image_text_file_name = vars_args['output']
 
-            # Decoder decoder = new Decoder(input_image_file_name, output_image_text_file_name)
-            # decoder.decode()
+            decoder = Decoder(input_image_file_name, output_image_text_file_name)
+            print(decoder.decode())
         else:
             input_image_file_name = vars_args['input']
             input_message_to_encode = vars_args['message']
