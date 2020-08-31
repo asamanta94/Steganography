@@ -22,57 +22,54 @@ class Decoder:
 
         pixels = image.load()
 
-        height = image.height
-        width = image.width
+        width, height = image.size
 
         str_concat = ""
         xml_str = ""
         k = 0
 
-        for i in range(0, height):
-            for j in range(0, width):
+        for i in range(0, width):
+            for j in range(0, height):
                 r, g, b = pixels[i, j]
 
                 r_bin_str = format(r, "08b")
                 g_bin_str = format(g, "08b")
                 b_bin_str = format(b, "08b")
 
-                # print(i, j, r_bin_str, g_bin_str, b_bin_str)
-
                 str_concat += r_bin_str[7]
-                # k += 1
-                # if k == 8:
-                #     k = 0
-                #     x = chr(int(str_concat, 2))
-                #     xml_str += x
-                #     if x == '>':
-                #         return xml_str
-                #     str_concat = ""
+                k += 1
+                if k == 8:
+                    k = 0
+                    x = int(str_concat, 2).to_bytes(8, "big").decode("utf-8")
+                    xml_str += x
+                    if x == '>':
+                        return xml_str
+                    str_concat = ""
 
                 str_concat += g_bin_str[7]
-                # k += 1
-                # if k == 8:
-                #     k = 0
-                #     x = chr(int(str_concat, 2))
-                #     xml_str += x
-                #     if x == '>':
-                #         return xml_str
-                #     str_concat = ""
+                k += 1
+                if k == 8:
+                    k = 0
+                    x = int(str_concat, 2).to_bytes(4, "big").decode("utf-8")
+                    xml_str += x
+                    if x == '>':
+                        return xml_str
+                    str_concat = ""
 
                 str_concat += b_bin_str[7]
-                # k += 1
-                # if k == 8:
-                #     k = 0
-                #     x = chr(int(str_concat, 2))
-                #     xml_str += x
-                #     if x == '>':
-                #         return xml_str
-                #     str_concat = ""
-
                 k += 1
+                if k == 8:
+                    k = 0
+                    x = int(str_concat, 2).to_bytes(4, "big").decode("utf-8")
+                    xml_str += x
+                    if x == '>':
+                        return xml_str
+                    str_concat = ""
 
-                if k == 168:
-                    return str_concat
+                # k += 1
+                #
+                # if k == 168:
+                #     return str_concat
 
     def decode_image(self):
         pass

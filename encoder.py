@@ -70,7 +70,8 @@ class Encoder:
         """
 
         # Take the bytearray of the string and convert each byte into binary format.
-        return ''.join([bin(byte)[2:] for byte in bytearray(string)])
+        # string -> bytearray -> bytes -> binary
+        return ''.join([format(byte, "08b") for byte in bytearray(string)])
 
     def __encode_bin_in_pixels(self, binary_str, pixels, width, height, new_im):
         """
@@ -91,8 +92,8 @@ class Encoder:
             p_val_str = format(p_val, "08b")
             return p_val_str[:7] + val
 
-        for i in range(0, height):
-            for j in range(0, width):
+        for i in range(0, width):
+            for j in range(0, height):
                 r, g, b = pixels[i, j]
 
                 r_mod = _embed_val(r, binary_str[str_iter])
@@ -119,16 +120,16 @@ class Encoder:
         image = Image.open(self.input_image_file_name).convert("RGB")
         base64_encoded_message = self.__convert_message_to_base64()
         xml_string = self.__embed_message_in_xml(message=base64_encoded_message.decode('utf-8'))
-        print(xml_string)
         xml_string_bin = self.__convert_string_to_bin(xml_string)
         print(xml_string_bin)
 
         # Get pixels from image.
         pixels = image.load()
+        width, height = image.size
 
         # Encode
         im = image.copy()
-        self.__encode_bin_in_pixels(binary_str=xml_string_bin, pixels=pixels, width=image.width, height=image.height,
+        self.__encode_bin_in_pixels(binary_str=xml_string_bin, pixels=pixels, width=width, height=height,
                                     new_im=im)
 
         image.close()
