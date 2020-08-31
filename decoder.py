@@ -40,9 +40,11 @@ class Decoder:
                 k += 1
                 if k == 8:
                     k = 0
-                    x = int(str_concat, 2).to_bytes(8, "big").decode("utf-8")
+                    x = int(str_concat, 2).to_bytes(1, "big").decode("utf-8")
                     xml_str += x
-                    if x == '>':
+                    print(len(x))
+                    print(xml_str)
+                    if len(xml_str) >= 2 and xml_str[len(xml_str) - 2:] == "/>":
                         return xml_str
                     str_concat = ""
 
@@ -50,9 +52,11 @@ class Decoder:
                 k += 1
                 if k == 8:
                     k = 0
-                    x = int(str_concat, 2).to_bytes(4, "big").decode("utf-8")
+                    x = int(str_concat, 2).to_bytes(1, "big").decode("utf-8")
                     xml_str += x
-                    if x == '>':
+                    print(len(x))
+                    print(xml_str)
+                    if len(xml_str) >= 2 and xml_str[len(xml_str) - 2:] == "/>":
                         return xml_str
                     str_concat = ""
 
@@ -60,16 +64,13 @@ class Decoder:
                 k += 1
                 if k == 8:
                     k = 0
-                    x = int(str_concat, 2).to_bytes(4, "big").decode("utf-8")
+                    x = int(str_concat, 2).to_bytes(1, "big").decode("utf-8")
                     xml_str += x
-                    if x == '>':
+                    print(len(x))
+                    print(xml_str)
+                    if len(xml_str) >= 2 and xml_str[len(xml_str) - 2:] == "/>":
                         return xml_str
                     str_concat = ""
-
-                # k += 1
-                #
-                # if k == 168:
-                #     return str_concat
 
     def decode_image(self):
         pass
