@@ -1,6 +1,8 @@
+import base64
 import logging
 import sys
 
+import xml.etree.ElementTree as ET
 from os import path
 from PIL import Image
 
@@ -14,6 +16,12 @@ class Decoder:
         self.output_message_file = output_message_file_name
 
     def decode(self):
+        xml_str = self.decode_image()
+        xml = ET.fromstring(xml_str)
+        message = xml.attrib["message"]
+        logging.info("Decoded message is {}.".format(base64.b64decode(message).decode()))
+
+    def decode_image(self):
         if not path.exists(self.input_image_file_name):
             logging.error("Input image file {} does not exist.".format(self.input_image_file_name))
             sys.exit()
@@ -42,8 +50,6 @@ class Decoder:
                     k = 0
                     x = int(str_concat, 2).to_bytes(1, "big").decode("utf-8")
                     xml_str += x
-                    print(len(x))
-                    print(xml_str)
                     if len(xml_str) >= 2 and xml_str[len(xml_str) - 2:] == "/>":
                         return xml_str
                     str_concat = ""
@@ -54,8 +60,6 @@ class Decoder:
                     k = 0
                     x = int(str_concat, 2).to_bytes(1, "big").decode("utf-8")
                     xml_str += x
-                    print(len(x))
-                    print(xml_str)
                     if len(xml_str) >= 2 and xml_str[len(xml_str) - 2:] == "/>":
                         return xml_str
                     str_concat = ""
@@ -66,14 +70,9 @@ class Decoder:
                     k = 0
                     x = int(str_concat, 2).to_bytes(1, "big").decode("utf-8")
                     xml_str += x
-                    print(len(x))
-                    print(xml_str)
                     if len(xml_str) >= 2 and xml_str[len(xml_str) - 2:] == "/>":
                         return xml_str
                     str_concat = ""
-
-    def decode_image(self):
-        pass
 
     def save_image(self):
         if self.output_message_file_name is None:

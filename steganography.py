@@ -20,7 +20,7 @@ class Steganography:
             output_image_text_file_name = vars_args['output']
 
             decoder = Decoder(input_image_file_name, output_image_text_file_name)
-            print(decoder.decode())
+            decoder.decode()
         else:
             input_image_file_name = vars_args['input']
             input_message_to_encode = vars_args['message']
